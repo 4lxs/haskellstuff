@@ -1,8 +1,9 @@
 module Main (main) where
 
-import Data.ByteString (pack, readFile, unpack, writeFile)
+import Data.ByteString.Lazy (pack, readFile, unpack, writeFile)
 import Data.Char (chr, digitToInt, ord)
-import Data.List (foldl', group, sort, sortOn)
+import Data.List (foldl', sortOn)
+import qualified Data.Map.Strict as M
 import Data.Maybe (fromJust)
 import Data.Ord (Down (Down))
 import Data.Word (Word8)
@@ -14,8 +15,8 @@ main = do
   args <- getArgs
   case args of
     ["file", x] -> do
-      content <- unpack <$> Data.ByteString.readFile x
-      Data.ByteString.writeFile "out.bin" (pack $ bitString2Bytes $ shannonFano content)
+      content <- unpack <$> Data.ByteString.Lazy.readFile x
+      Data.ByteString.Lazy.writeFile "out.bin" (pack $ bitString2Bytes $ shannonFano content)
     ["string", x] -> do
       let bitString = shannonFano $ map (fromIntegral . ord) x
       putStrLn bitString
@@ -33,7 +34,7 @@ shannonFano s = do
   coded
  where
   occurances :: [Word8] -> [(Word8, Int)]
-  occurances = map (\xs -> (head xs, length xs)) . group . sort
+  occurances = M.toList . foldl' (\acc x -> M.insertWith (+) x 1 acc) M.empty
 
   fanoCode :: [(Word8, Double)] -> Word8 -> String
   fanoCode freq word = fromJust $ lookup word $ genFanoCode "" (sortOn (Down . snd) freq)

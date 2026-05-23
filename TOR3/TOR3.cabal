@@ -67,7 +67,7 @@ executable TOR3
     -- other-extensions:
 
     -- Other library packages from which modules are imported.
-    build-depends:    base ^>=4.19.2.0, bytestring
+    build-depends:    containers, base, bytestring
 
     -- Directories containing source files.
     hs-source-dirs:   app
