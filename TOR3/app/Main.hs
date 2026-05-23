@@ -41,7 +41,7 @@ shannonFano s = do
 
   genFanoCode :: String -> [(Word8, Double)] -> [(Word8, String)]
   genFanoCode _ [] = []
-  genFanoCode pref [(word, _)] = [(word, pref)]
+  genFanoCode pref [(word, _)] = [(word, reverse pref)]
   genFanoCode pref freq = genFanoCode ('1' : pref) mostFreq ++ genFanoCode ('0' : pref) leastFreq
    where
     (mostFreq, leastFreq) = splitFreqInHalf freq
